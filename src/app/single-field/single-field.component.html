@@ -1,0 +1,14 @@
+<tr>
+  <td [class.subfield]="subfield">{{field.labelkey|translate}}</td>
+  <td><sui-checkbox class="checkbox" [(ngModel)]="field.$.enabled"></sui-checkbox></td>
+  <td>{{field.$.alias}}</td>
+  <td>{{field.$.defaultValue}}</td>
+  <td>{{field._help}}</td>
+</tr>
+<tr *ngIf="expandedView">
+  <td colspan="5">
+    <div class="segment">
+      <input class="input"/>
+    </div>
+  </td>
+</tr>

@@ -1,0 +1,25 @@
+<table class="ui striped compact table">
+  <thead>
+  <tr>
+    <th translate>OPTIONSET_NAME</th>
+    <th translate>OPTIONSET_DESCRIPTION</th>
+    <th>
+      <!--div class="compact ui right floated small primary labeled icon button">
+          <i class="add icon"></i>{{'CREATE'|translate}}
+      </div-->
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let item of optionsets">
+    <td>{{'optionset.labels.'+item.$.name|translate}}</td>
+    <td>{{item.$.description}}</td>
+    <td>
+    <div class="compact ui right floated small icon buttons">
+      <button class="mini compact ui button"><i class="edit icon"></i></button>
+      <!--button class="mini compact ui button"><i class="delete icon"></i></button-->
+    </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

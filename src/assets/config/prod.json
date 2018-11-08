@@ -1,0 +1,21 @@
+{
+    "env": {
+        "name": "prod"
+    },
+    "getSpec": {
+    	"mode": "script",
+        "value": "(function(id,cb){var p=parent;var q=new p.Hash();q.set('get_action','get_spec_by_id');q.set('spec_id', id);q.set('plugin_id','meta.lom');q.set('draft', 1);var c=new p.Connexion();c.setParameters(q);c.onComplete=function(t){var x=t.responseText;cb(x);};c.sendAsync();})(spec_id,callback)"
+    },
+    "getSpecList": {
+    	"mode": "script",
+    	"value": "(function(cb){var p=parent;var q=new p.Hash();q.set('get_action','get_specs_list');q.set('plugin_id','meta.lom');q.set('draft', 1);var c=new p.Connexion();c.setParameters(q);c.onComplete=function(t){var r=t.responseJSON;r=r.LIST;var o=[];for(var k in r){o.push({id:k,name:r[k]});};cb(o);};c.sendAsync();})(callback)"
+    },
+    "saveSpec": {
+        "mode": "script",
+        "value": "(function(xml,cb){var p=parent;var q=new p.Hash();q.set('action','save_spec_xml');q.set('plugin_id','meta.lom');q.set('xml',xml);var c=new p.Connexion();c.setParameters(q);c.setMethod('post');c.onComplete=function(t){var x=t.responseText;cb(x);};c.sendAsync(xml);})(xml,callback)"
+    },
+    "publishSpec": {
+        "mode": "script",
+        "value": "(function(id,cb){var p=parent;var q=new p.Hash();q.set('action','publish_spec_xml');q.set('plugin_id','meta.lom');q.set('spec_id',id);var c=new p.Connexion();c.setParameters(q);c.setMethod('post');c.onComplete=function(t){var x=t.responseText;cb(x);};c.sendAsync(id);})(id,callback)"
+    }
+}

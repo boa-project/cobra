@@ -1,0 +1,22 @@
+<div class="ui mini form" [formGroup]="group">
+  <div class="fields" formGroupName="defaultValue">
+    <div class="field">
+      <label translate>VCARD_NAME</label>
+      <input type="text" placeholder="{{'VCARD_NAME'|translate}}" formControlName="name">
+    </div>
+    <div class="field">
+      <label translate>VCARD_LASTNAME</label>
+      <input type="text" placeholder="{{'VCARD_LASTNAME'|translate}}" formControlName="lastname">
+    </div>
+  </div>
+  <div class="fields" formGroupName="defaultValue">
+    <div class="field">
+      <label translate>VCARD_COMPANY</label>
+      <input type="text" placeholder="{{'VCARD_COMPANY'|translate}}" formControlName="company">
+    </div>
+    <div class="field">
+      <label translate>VCARD_EMAIL</label>
+      <input type="text" placeholder="{{'VCARD_EMAIL'|translate}}" formControlName="email">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+{
+    "env": {
+        "name": "dev"
+    },
+    "getSpec": {
+    	"mode": "url",
+    	"value": "./assets/specs/{{ID}}.xml"
+    },
+    "getSpecList": {
+    	"mode": "url",
+    	"value": "./assets/specs/list.json"
+    },
+    "saveSpec": {
+        "mode": "url",
+        "value": "./assets/specs/"
+    }
+}

@@ -1,0 +1,11 @@
+<div [formGroup]="group">
+  <sui-multi-select class="selection" *ngIf="multiple else singleSelect" [options]="options"
+    formControlName="defaultValue" labelField="text" valueField="value" [isSearchable]="true" #multiselect>
+    <sui-select-option *ngFor="let item of multiselect.filteredOptions" [value]="item"></sui-select-option>
+  </sui-multi-select>
+  <ng-template #singleSelect>
+    <sui-select class="selection" [options]="options" formControlName="defaultValue" labelField="text" valueField="value" [isSearchable]="true" (ngModelChange)="change($event)" #select>
+      <sui-select-option *ngFor="let item of select.filteredOptions" [value]="item"></sui-select-option>
+    </sui-select>
+  </ng-template>
+</div>

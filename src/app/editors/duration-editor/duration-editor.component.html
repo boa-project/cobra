@@ -1,0 +1,30 @@
+<div class="ui mini form" [formGroup]="group">
+  <div class="fields" formGroupName="defaultValue">
+    <div class="field">
+      <label translate>DURATION_YEARS</label>
+      <input type="text" placeholder="{{'DURATION_YEARS'|translate}}" formControlName="years">
+    </div>
+    <div class="field">
+      <label translate>DURATION_MONTHS</label>
+      <input type="text" placeholder="{{'DURATION_MONTHS'|translate}}" formControlName="months">
+    </div>
+    <div class="field">
+      <label translate>DURATION_DAYS</label>
+      <input type="text" placeholder="{{'DURATION_DAYS'|translate}}" formControlName="days">
+    </div>
+  </div>
+  <div class="fields" formGroupName="defaultValue">
+    <div class="field">
+      <label translate>DURATION_HOURS</label>
+      <input type="text" placeholder="{{'DURATION_HOURS'|translate}}" formControlName="hours">
+    </div>
+    <div class="field">
+      <label translate>DURATION_MINUTES</label>
+      <input type="text" placeholder="{{'DURATION_MINUTES'|translate}}" formControlName="minutes">
+    </div>
+    <div class="field">
+      <label translate>DURATION_SECONDS</label>
+      <input type="text" placeholder="{{'DURATION_SECONDS'|translate}}" formControlName="seconds">
+    </div>
+  </div>
+</div>

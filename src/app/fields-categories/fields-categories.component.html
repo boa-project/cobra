@@ -1,0 +1,84 @@
+<sui-accordion class="styled fluid" *ngIf="categories else empty">
+  <sui-accordion-panel [isOpen]="false" *ngFor="let item of categories" [formGroup]="item.group">
+    <div title>
+      <i class="dropdown icon"></i>
+      {{item.labelkey|translate}}
+    </div>
+    <div content>
+      <sui-checkbox class="checkbox" formControlName="isCollection">{{'META_ISCOLLECTION'|translate}}</sui-checkbox>
+			<table class="ui striped compact table">
+			  <thead>
+				  <tr class="collapsing">
+				    <th translate>META_NAME</th>
+            <th translate>META_DEFAULT</th>
+            <th class="collapsing"><i class="check icon" suiPopup popupText="{{'META_INUSE'|translate}}"></i></th>
+            <th class="collapsing"><i class="eye icon" suiPopup popupText="{{'META_ISVISIBLE'|translate}}"></i></th>
+            <th class="collapsing"><i class="edit icon" suiPopup popupText="{{'META_ISEDITABLE'|translate}}"></i></th>
+            <th class="collapsing"><i class="exclamation icon" suiPopup popupText="{{'META_ISREQUIRED'|translate}}"></i></th>
+            <th class="collapsing"><i class="object group icon" suiPopup popupText="{{'META_ISCOLLECTION'|translate}}"></i></th>
+            <th class="collapsing"><i class="help icon" suiPopup popupText="{{'META_HELP'|translate}}"></i></th>
+            <th></th>
+				  </tr>
+				  </thead>
+			  <tbody>
+			  	<ng-container formArrayName="fields" *ngFor="let field of item.group.get('fields').controls; let ai=index">
+					  <tr *ngIf="field.get('_type').value!='composed' else composedField" class="collapsing" [formGroupName]="ai">
+					    <td>{{field.get('_labelkey').value|translate}}</td>
+              <td><div class="ui mini form"><ng-template [editorSelector]="field" [editorOptions]="editorOptions"></ng-template></div></td>
+					    <td class="collapsing"><sui-checkbox class="checkbox" formControlName="enabled" (click)="fieldEnabledChanged(field, 0)"></sui-checkbox></td>
+              <td class="collapsing"><sui-checkbox class="checkbox" formControlName="visible"></sui-checkbox></td>
+              <td class="collapsing"><sui-checkbox class="checkbox" formControlName="editable"></sui-checkbox></td>
+              <td class="collapsing"><sui-checkbox class="checkbox" formControlName="required"></sui-checkbox></td>
+              <td class="collapsing"><sui-checkbox class="checkbox" formControlName="collection"></sui-checkbox></td>
+					    <td class="collapsing"><a suiPopup popupText="{{field.get('_help').value}}" (click)="editHelp(field)"><i class="file alternate outline icon"></i></a></td>
+              <td class="collapsing"><i class="ellipsis vertical icon" (click)="showMore()"></i></td>
+					  </tr>
+					  <ng-template #composedField>
+              <ng-container [formGroupName]="ai">
+  						  <tr>
+  						    <td>{{field.get('_labelkey').value|translate}}</td>
+                  <td></td>
+  						    <td class="collapsing"><sui-checkbox class="checkbox" formControlName="enabled" (click)="fieldEnabledChanged(field, 1)"></sui-checkbox></td>
+                  <td class="collapsing"><sui-checkbox class="checkbox" formControlName="visible" [isDisabled]="!field.get('enabled').value"></sui-checkbox></td>
+                  <td class="collapsing"><sui-checkbox class="checkbox" [isDisabled]="true"></sui-checkbox></td>
+                  <td class="collapsing"><sui-checkbox class="checkbox" [isDisabled]="true"></sui-checkbox></td>
+                  <td class="collapsing"><sui-checkbox class="checkbox" formControlName="collection" [isDisabled]="!field.get('enabled').value"></sui-checkbox></td>
+  						    <td class="collapsing"><a suiPopup popupText="{{field.get('_help').value}}" (click)="editHelp(field)"><i class="file alternate outline icon"></i></a></td>
+                  <td></td>
+  						  </tr>
+                <ng-container formArrayName="fields" *ngFor="let sfield of field.get('fields').controls; let si=index">
+    						  <tr class="collapsing" [formGroupName]="si">
+    						    <td class="subfield">{{sfield.get('_labelkey').value|translate}}</td>
+    						    <td><div class="ui mini form"><ng-template [editorSelector]="sfield" [editorOptions]="editorOptions"></ng-template></div></td>
+                    <td class="collapsing"><sui-checkbox class="checkbox" [isDisabled]="true"></sui-checkbox></td>
+                    <td class="collapsing"><sui-checkbox class="checkbox" formControlName="visible" [isDisabled]="!field.get('enabled').value"></sui-checkbox></td>
+                    <td class="collapsing"><sui-checkbox class="checkbox" formControlName="editable" [isDisabled]="!field.get('enabled').value"></sui-checkbox></td>
+                    <td class="collapsing"><sui-checkbox class="checkbox" formControlName="required" [isDisabled]="!field.get('enabled').value"></sui-checkbox></td>
+                    <td class="collapsing"></td>
+                    <td class="collapsing"><a suiPopup popupText="{{sfield.get('_help').value}}" (click)="editHelp(sfield)"><i class="file alternate outline icon"></i></a></td>
+                    <td class="collapsing"><i class="ellipsis vertical icon" [class.active]="field._collapse" (click)="field._collapse=!field.collapse"></i></td>
+    						  </tr>
+                </ng-container>
+              </ng-container>
+					  </ng-template>
+				  	</ng-container>
+			  </tbody>
+			</table>
+    </div>
+  </sui-accordion-panel>
+</sui-accordion>
+<ng-template #empty>
+  <br />
+</ng-template>
+<ng-template let-context let-modal="modal" #helpModalTemplate>
+    <div class="header">{{'EDIT_HELP_TITLE'|translate}}{{context.fieldName|translate}}</div>
+    <div class="content ui form">
+      <div class="field" [formGroup]="context.formGroup">
+        <textarea rows="8" formControlName="_help"></textarea>
+      </div>
+    </div>
+    <div class="actions">
+        <button class="ui button" (click)="modal.deny(null)">{{'CANCEL'|translate}}</button>
+        <button class="ui button" (click)="modal.approve(context.formGroup.value)" autofocus>{{'ACCEPT'|translate}}</button>
+    </div>
+</ng-template>

@@ -1,20 +1,198 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="ui fixed stackable menu">
+  <div class="right menu">
+    <div class="ui dropdown link item right" suiDropdown>
+      <span>{{currentSpec?currentSpec.name:'SELECT_A_SPEC'|translate}}</span>
+      <i class="dropdown icon"></i>
+      <div class="menu" suiDropdownMenu>
+        <div class="item" (click)="specChanged(option)" *ngFor="let option of specs">{{option.name}}</div>
+      </div>  
+    </div>
+    <a class="item" (click)="saveSpec(specModel)" [class.disabled]="!(config.form && config.form.dirty)"><i class="save icon"></i>{{'SAVE'|translate}}</a>
+    <a class="item" (click)="createSpec()"><i class="add icon"></i>{{'CREATE'|translate}}</a>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
 
+<div  *ngIf="!config.form else specForm">
+  <br/>
+  <br/>
+  <div class="ui main container yellow message center aligned">
+    {{'SELECT_OR_CREATE_SPEC'|translate}}
+  </div>
+</div>
+
+<ng-template #specForm>
+<div class="ui main container" [class.loading]="loading">
+
+  <h4 class="ui horizontal divider header">
+    <i class="cogs icon"></i>{{'GENERAL_INFORMATION'|translate}}
+  </h4>
+
+  <form class="ui form" #form [formGroup]="config.form">
+    <div class="two fields">
+      <div class="field">
+        <label translate>SPEC_ID</label>
+        <input type="text" name="spec[id]" placeholder="{{'SPEC_ID'|translate}}" formControlName='id' [readonly]="!isNew">
+      </div>
+      <div class="field">
+        <label translate>SPEC_NAME</label>
+        <input type="text" name="spec[name]" placeholder="{{'SPEC_NAME'|translate}}"  formControlName='name'>
+      </div>
+    </div>
+    <div class="field">
+      <label translate>SPEC_DESCRIPTION</label>
+      <textarea rows="2" name="spec[description]" placeholder="{{'SPEC_DESCRIPTION'|translate}}"  formControlName='description'></textarea>
+    </div>
+
+    <h4 class="ui horizontal divider header">
+      <i class="tags icon"></i>{{'METADATA_INFORMATION'|translate}}
+    </h4>
+
+    <sui-tabset>
+        <div class="ui three tabs attached menu">
+          <div class="item" suiTabHeader="fields" translate>SPEC_FIELDS</div>
+          <div class="item" suiTabHeader="options" translate>SPEC_OPTIONSETS</div>
+          <div class="item" suiTabHeader="types" translate>SPEC_TYPES</div>
+        </div>
+        <div class="ui bottom attached segment" suiTabContent="types">
+          <app-types-list [types]="specModel.types"></app-types-list>
+        </div>
+        <div class="ui bottom attached segment" suiTabContent="options">
+          <app-optionsets-list [optionsets]="specModel.optionsets"></app-optionsets-list>
+        </div>
+        <div class="ui bottom attached segment" suiTabContent="fields">
+          <app-fields-categories [categories]="config.categories" [optionsets]="specModel.optionsets"></app-fields-categories>
+        </div>
+    </sui-tabset>
+
+    <sui-message *ngIf="message.visible" class="{{message.class}}" #message>
+        <i *ngIf="message.icon" class="{{message.icon}} icon"></i>
+        <div class="content">
+            <div class="header">
+                {{message.header|translate}}
+            </div>
+            <p>{{message.content|translate}}</p>
+        </div>
+    </sui-message>
+
+  </form>
+
+</div>
+</ng-template>
+<!--
+ <form class="ui form">
+  <div class="field">
+    <label>Billing Address</label>
+    <div class="fields">
+      <div class="twelve wide field">
+        <input type="text" name="shipping[address]" placeholder="Street Address">
+      </div>
+      <div class="four wide field">
+        <input type="text" name="shipping[address-2]" placeholder="Apt #">
+      </div>
+    </div>
+  </div>
+  <h4 class="ui dividing header">Billing Information</h4>
+  <div class="field">
+    <label>Card Type</label>
+    <div class="ui selection dropdown">
+      <input type="hidden" name="card[type]">
+      <div class="default text">Type</div>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <div class="item" data-value="visa">
+          <i class="visa icon"></i>
+          Visa
+        </div>
+        <div class="item" data-value="amex">
+          <i class="amex icon"></i>
+          American Express
+        </div>
+        <div class="item" data-value="discover">
+          <i class="discover icon"></i>
+          Discover
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fields">
+    <div class="seven wide field">
+      <label>Card Number</label>
+      <input type="text" name="card[number]" maxlength="16" placeholder="Card #">
+    </div>
+    <div class="three wide field">
+      <label>CVC</label>
+      <input type="text" name="card[cvc]" maxlength="3" placeholder="CVC">
+    </div>
+    <div class="six wide field">
+      <label>Expiration</label>
+      <div class="two fields">
+        <div class="field">
+          <select class="ui fluid search dropdown" name="card[expire-month]">
+            <option value="">Month</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div class="field">
+          <input type="text" name="card[expire-year]" maxlength="4" placeholder="Year">
+        </div>
+      </div>
+    </div>
+  </div>
+   <h4 class="ui dividing header">Receipt</h4>
+   <div class="field">
+    <label>Send Receipt To:</label>
+    <div class="ui fluid multiple search selection dropdown">
+      <input type="hidden" name="receipt">
+      <i class="dropdown icon"></i>
+      <div class="default text">Saved Contacts</div>
+      <div class="menu">
+        <div class="item" data-value="jenny" data-text="Jenny">
+          <img class="ui mini avatar image" src="/images/avatar/small/jenny.jpg">
+          Jenny Hess
+        </div>
+        <div class="item" data-value="elliot" data-text="Elliot">
+          <img class="ui mini avatar image" src="/images/avatar/small/elliot.jpg">
+          Elliot Fu
+        </div>
+        <div class="item" data-value="stevie" data-text="Stevie">
+          <img class="ui mini avatar image" src="/images/avatar/small/stevie.jpg">
+          Stevie Feliciano
+        </div>
+        <div class="item" data-value="christian" data-text="Christian">
+          <img class="ui mini avatar image" src="/images/avatar/small/christian.jpg">
+          Christian
+        </div>
+        <div class="item" data-value="matt" data-text="Matt">
+          <img class="ui mini avatar image" src="/images/avatar/small/matt.jpg">
+          Matt
+        </div>
+        <div class="item" data-value="justen" data-text="Justen">
+          <img class="ui mini avatar image" src="/images/avatar/small/justen.jpg">
+          Justen Kitsune
+        </div>
+      </div>
+    </div>
+  </div>
+   <div class="ui segment">
+    <div class="field">
+      <div class="ui toggle checkbox">
+        <input type="checkbox" name="gift" tabindex="0" class="hidden">
+        <label>Do not include a receipt in the package</label>
+      </div>
+    </div>
+  </div>
+  <div class="ui button" tabindex="0">Submit Order</div>
+</form>
+-->

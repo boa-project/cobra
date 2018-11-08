@@ -1,0 +1,7 @@
+.ui.compact.table td.collapsing, .ui.compact.table th.collapsing {
+  padding: 0.5em 0em;
+}
+.ui.compact.table td.subfield {
+	padding-left: 1.5em;
+}
+
